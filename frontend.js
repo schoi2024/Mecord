@@ -1,8 +1,13 @@
 // Script for website interaction
 
-document.getElementById("inputField").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault(); // Prevent form submission (if inside a form)
-        window.location.href = "askincome.html"; // Change to your desired page
-    }
+document.getElementById("priceForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevents the form from submitting and reloading the page
+    
+    // Get the number entered by the user
+    const number = document.getElementById("inputPrice").value;
+    
+    // You can process the number here (e.g., save it, log it, etc.)
+    console.log("Submitted number:", number);
+    
+    window.location.href = "askincome.html?number=" + encodeURIComponent(number);
 });

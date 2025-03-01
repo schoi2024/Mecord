@@ -37,3 +37,19 @@ input[type="text"]::placeholder {
     font-family: 'Yeseva One';font-size: 22px;
 }
 
+input[type="number"] {
+    border: none; /* Remove the default border */
+    background: transparent;
+    border-bottom: 2px solid #D0C092;
+    outline: none; /* Remove the outline when focused */
+    padding: 5px 0; /* Adjust the padding */
+    font-size: 22px; /* Adjust the font size */
+    color: #f6edd4;
+    font-family: 'Yeseva One';font-size: 22px;
+}
+
+input[type="number"]::placeholder {
+    color: #D0C092; /* Set your desired color */
+    font-family: 'Yeseva One';font-size: 22px;
+}
+
