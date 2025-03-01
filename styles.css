@@ -1,3 +1,5 @@
+/* Styles for web */
+
 html,
 body {
     height: 100%;
@@ -5,6 +7,7 @@ body {
     padding: 0;
     overflow: hidden;
 }
+
 body {
     display: flex;
     flex-direction: column;
@@ -14,9 +17,9 @@ body {
     padding: 75px 0;
     background:  #908864;
     
-    font-family: 'Yeseva One';font-size: 22px;
-    color: #D0C092;
-  }
+    font-family: 'Yeseva One';font-size: 30px;
+    color: #f6edd4;
+}
 
 input[type="text"] {
     border: none; /* Remove the default border */
@@ -25,9 +28,12 @@ input[type="text"] {
     outline: none; /* Remove the outline when focused */
     padding: 5px 0; /* Adjust the padding */
     font-size: 22px; /* Adjust the font size */
-    text-emphasis-color: #D0C092;
+    color: #f6edd4;
+    font-family: 'Yeseva One';font-size: 22px;
 }
+
 input[type="text"]::placeholder {
     color: #D0C092; /* Set your desired color */
     font-family: 'Yeseva One';font-size: 22px;
-  }
+}
+
