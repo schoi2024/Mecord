@@ -1,0 +1,33 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: center;
+    margin: 0;
+    padding: 75px 0;
+    background:  #908864;
+    
+    font-family: 'Yeseva One';font-size: 22px;
+    color: #D0C092;
+  }
+
+input[type="text"] {
+    border: none; /* Remove the default border */
+    background: transparent;
+    border-bottom: 2px solid #D0C092;
+    outline: none; /* Remove the outline when focused */
+    padding: 5px 0; /* Adjust the padding */
+    font-size: 22px; /* Adjust the font size */
+    text-emphasis-color: #D0C092;
+}
+input[type="text"]::placeholder {
+    color: #D0C092; /* Set your desired color */
+    font-family: 'Yeseva One';font-size: 22px;
+  }
