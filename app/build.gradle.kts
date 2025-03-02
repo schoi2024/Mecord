@@ -11,8 +11,12 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+   // kotlin("jvm") version "1.9.0"
+    //kotlin("plugin.serialization") version "1.9.0"
+    //id("io.ktor.plugin") version "2.3.0"
 }
-
+group = "com.example.budgetapp"
+version = "1.0.0"
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -29,6 +33,13 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+    implementation("io.ktor:ktor-server-core:2.3.0")
+    implementation("io.ktor:ktor-server-netty:2.3.0")
+    implementation("io.ktor:ktor-server-content-negotiation:2.3.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
+
+    testImplementation("io.ktor:ktor-server-tests:2.3.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
