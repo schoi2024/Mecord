@@ -103,18 +103,29 @@ const budgetSubmitButton = document.getElementById("budgetSubmit");
 if (budgetSubmitButton) {
     budgetSubmitButton.addEventListener("click", function(event) {
         event.preventDefault();
-        groceries = document.getElementById("groceries").value.replace(/[^\d.-]/g, '');
+
         eating_out = document.getElementById("eating-out").value.replace(/[^\d.-]/g, '');
+        localStorage.setItem("eating_out", eating_out);
+
         shopping = document.getElementById("shopping").value.replace(/[^\d.-]/g, '');
+        localStorage.setItem("shopping", shopping);
+
+        groceries = document.getElementById("groceries").value.replace(/[^\d.-]/g, '');
+        localStorage.setItem("groceries", groceries);
+
         necessities = document.getElementById("necessities").value.replace(/[^\d.-]/g, '');
+        localStorage.setItem("necessities", necessities);
+
         transportation = document.getElementById("transportation").value.replace(/[^\d.-]/g, '');
+        localStorage.setItem("transportation", transportation);
 
         sendDataToKotlin();
 
-        window.location.href = "finalBudget.html?groceries=" + encodeURIComponent(groceries) + "&eating_out=" + encodeURIComponent(eating_out) + "&shopping=" + encodeURIComponent(shopping) + "&necessities=" + encodeURIComponent(necessities) + "&transportation=" + encodeURIComponent(transportation) + "&itemName=" + encodeURIComponent(itemName) + "&price=" + encodeURIComponent(price) + "&week=" + encodeURIComponent(week) + "&income=" + encodeURIComponent(income);
+        window.location.href = "finalBudget.html";
     });
 }
 
+// finalBudget.html: retrieve all input values
 const displayInputElement = document.getElementById("displayInput");
 if (displayInputElement) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -122,15 +133,37 @@ if (displayInputElement) {
     const l_price = localStorage.getItem("price");
     const l_week = localStorage.getItem("week");
     const l_income = localStorage.getItem("income");
-    const l_groceries = urlParams.get("groceries");
-    const l_eating_out = urlParams.get("eating_out");
-    const l_shopping = urlParams.get("shopping");
-    const l_necessities = urlParams.get("necessities");
-    const l_transportation = urlParams.get("transportation");
-
-    document.getElementById("displayInput").innerHTML = l_item + "<br>" + l_price + "<br>" + l_week + "<br>" + l_income + "<br>" + l_groceries + "<br>" + l_eating_out + "<br>" + l_shopping + "<br>" + l_necessities + "<br>" + l_transportation;
+    const l_eating_out = localStorage.getItem("eating_out");
+    const l_shopping = localStorage.getItem("shopping");
+    const l_groceries = localStorage.getItem("groceries");
+    const l_necessities = localStorage.getItem("necessities");
+    const l_transportation = localStorage.getItem("transportation");
+    document.getElementById("displayInput").innerHTML = "Here is the generated budget plan to save up for:" + "<br>" + l_item + " ($" + l_price + ")" + "<br>" + "in " + l_week + " weeks!";
     
+    document.getElementById("displayInitial").innerHTML = "You have indicated that your monthly income is $" + l_income + ", <br> and your typical spendings are $" + l_eating_out + " for eating out/food deliveries, <br> $" + l_shopping + " for shopping, $" + l_groceries + " for groceries, <br> $" + l_necessities + " for necessities, and $" + l_transportation + " for transportation.";
 }
+
+// finalBudget.html: fill in table
+const tableBody = document.getElementById("finalBudget").getElementsByTagName("tbody")[0];
+if (tableBody) {
+    const numberOfRows = 5; // Set the number of rows
+    for (let i = 1; i <= numberOfRows; i++) {
+        let newRow = tableBody.insertRow();
+        
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+        let cell5 = newRow.insertCell(4);
+        let cell6 = newRow.insertCell(5);
+        let cell7 = newRow.insertCell(6);
+        
+        cell1.textContent = `Week ${i}`;
+        cell2.textContent = `$${(i * 100)}`; // Example value, can be dynamic
+        cell3.textContent = `$${(i * 50)}`; // Example value, can be dynamic
+    }
+}
+
 
 // function to send data to Kotlin backend
 function sendDataToKotlin() {
