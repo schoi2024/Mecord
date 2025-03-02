@@ -27,6 +27,7 @@ if (inputNameElement) {
     inputNameElement.addEventListener("input", function(event) {
         event.preventDefault();
         itemName = inputNameElement.value;
+        localStorage.setItem("itemName", itemName);
     });
 }
 
@@ -35,7 +36,8 @@ const priceFormElement = document.getElementById("priceForm");
 if (priceFormElement) {
     priceFormElement.addEventListener("submit", function(event) {
         event.preventDefault();
-        price = document.getElementById("inputNumber").value;
+        price = document.getElementById("inputNumber").value.replace(/[^\d.-]/g, '');;
+        localStorage.setItem("price", price);
         window.location.href = "askDuration.html?item=" + encodeURIComponent(itemName);
         // window.location.href = "askincome.html?item=" + encodeURIComponent(itemName) + "&price=" + encodeURIComponent(price);
     });
@@ -67,7 +69,8 @@ const weekFormElement = document.getElementById("weekForm");
 if (weekFormElement) {
     weekFormElement.addEventListener("submit", function(event) {
         event.preventDefault();
-        week = document.getElementById("inputWeek").value.replace(/[^\d.-]/g, '');;
+        week = document.getElementById("inputWeek").value.replace(/[^\d.-]/g, '');
+        localStorage.setItem("week", week);
         window.location.href = "askIncome.html";
     });
 }
@@ -77,11 +80,11 @@ const incomeFormElement = document.getElementById("incomeForm");
 if (incomeFormElement) {
     incomeFormElement.addEventListener("submit", function(event) {
         event.preventDefault();
-        income = document.getElementById("inputNumber").value;
+        income = document.getElementById("inputNumber").value.replace(/[^\d.-]/g, '');;
+        localStorage.setItem("income", income);
         window.location.href = "askBudget.html";
     });
 }
-
 
 // askBudget.html: set up table with budget values
 const inputBudgetElement = document.getElementsByClassName("amount");
@@ -108,10 +111,28 @@ if (budgetSubmitButton) {
 
         sendDataToKotlin();
 
-        window.location.href = "finalBudget.html?groceries=" + encodeURIComponent(groceries) + "&eating_out=" + encodeURIComponent(eating_out) + "&shopping=" + encodeURIComponent(shopping) + "&necessities=" + encodeURIComponent(necessities) + "&transportation=" + encodeURIComponent(transportation);
+        window.location.href = "finalBudget.html?groceries=" + encodeURIComponent(groceries) + "&eating_out=" + encodeURIComponent(eating_out) + "&shopping=" + encodeURIComponent(shopping) + "&necessities=" + encodeURIComponent(necessities) + "&transportation=" + encodeURIComponent(transportation) + "&itemName=" + encodeURIComponent(itemName) + "&price=" + encodeURIComponent(price) + "&week=" + encodeURIComponent(week) + "&income=" + encodeURIComponent(income);
     });
 }
 
+const displayInputElement = document.getElementById("displayInput");
+if (displayInputElement) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const l_item = localStorage.getItem("itemName");
+    const l_price = localStorage.getItem("price");
+    const l_week = localStorage.getItem("week");
+    const l_income = localStorage.getItem("income");
+    const l_groceries = urlParams.get("groceries");
+    const l_eating_out = urlParams.get("eating_out");
+    const l_shopping = urlParams.get("shopping");
+    const l_necessities = urlParams.get("necessities");
+    const l_transportation = urlParams.get("transportation");
+
+    document.getElementById("displayInput").innerHTML = l_item + "<br>" + l_price + "<br>" + l_week + "<br>" + l_income + "<br>" + l_groceries + "<br>" + l_eating_out + "<br>" + l_shopping + "<br>" + l_necessities + "<br>" + l_transportation;
+    
+}
+
+// function to send data to Kotlin backend
 function sendDataToKotlin() {
 
     var data = {
