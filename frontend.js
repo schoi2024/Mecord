@@ -98,7 +98,7 @@ if (inputBudgetElement) {
     }
 }
 
-// askBudget.html: retrieve budget values and redirect to _________
+// askBudget.html: retrieve budget values and redirect to finalBudget.html
 const budgetSubmitButton = document.getElementById("budgetSubmit");
 if (budgetSubmitButton) {
     budgetSubmitButton.addEventListener("click", function(event) {
@@ -118,8 +118,6 @@ if (budgetSubmitButton) {
 
         transportation = document.getElementById("transportation").value.replace(/[^\d.-]/g, '');
         localStorage.setItem("transportation", transportation);
-
-        sendDataToKotlin();
 
         window.location.href = "finalBudget.html";
     });
@@ -146,53 +144,78 @@ if (displayInputElement) {
 // finalBudget.html: fill in table
 const tableBody = document.getElementById("finalBudget").getElementsByTagName("tbody")[0];
 if (tableBody) {
-    const numberOfRows = 5; // Set the number of rows
-    for (let i = 1; i <= numberOfRows; i++) {
-        let newRow = tableBody.insertRow();
-        
-        let cell1 = newRow.insertCell(0);
-        let cell2 = newRow.insertCell(1);
-        let cell3 = newRow.insertCell(2);
-        let cell4 = newRow.insertCell(3);
-        let cell5 = newRow.insertCell(4);
-        let cell6 = newRow.insertCell(5);
-        let cell7 = newRow.insertCell(6);
-        
-        cell1.textContent = `Week ${i}`;
-        cell2.textContent = `$${(i * 100)}`; // Example value, can be dynamic
-        cell3.textContent = `$${(i * 50)}`; // Example value, can be dynamic
-    }
+    sendDataToKotlin(); // Call the function that fetches data from the backend
+    displayResult(result);
 }
+
 
 
 // function to send data to Kotlin backend
 function sendDataToKotlin() {
 
     var data = {
-        itemName: itemName,
-        price: price,
-        week: week,
-        income: income,
-        eatingOut: eating_out,
-        shopping: shopping,
-        groceries: groceries,
-        necessities: necessities,
-        transportation: transportation
+        itemName: localStorage.getItem("itemName"),
+        price: localStorage.getItem("price"),
+        week: localStorage.getItem("week"),
+        income: localStorage.getItem("income"),
+        eatingOut: localStorage.getItem("eating_out"),
+        shopping: localStorage.getItem("shopping"),
+        groceries: localStorage.getItem("groceries"),
+        necessities: localStorage.getItem("necessities"),
+        transportation: localStorage.getItem("transportation")
     };
 
     // Send data to Kotlin backend using fetch API
-    fetch("http://localhost:8080/submitBudget", {
+    fetch("http://localhost:8080/process-budget", { // ✅ Corrected endpoint
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Success:", data);
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
     })
-    .catch((error) => {
+    .then(result => {
+        console.log("Received result:", result);
+        const tb = document.getElementById("finalBudget").getElementsByTagName("tbody")[0];
+        if (tb) {
+            displayResult(result);
+        }
+    })
+    .catch(error => {
         console.error("Error:", error);
     });
+}
+
+function displayResult(result) {
+    const tableBody = document.getElementById("finalBudget").getElementsByTagName("tbody")[0];
+    tableBody.innerHTML = ""; // Clear previous results
+
+    for (const [week, values] of Object.entries(result)) {
+        let row = document.createElement("tr");
+
+        // Add Week #
+        let weekCell = document.createElement("td");
+        weekCell.textContent = `Week ${week}`;
+        row.appendChild(weekCell);
+
+        // Add spending categories (eating out, shopping, groceries, necessities, transportation)
+        for (let i = 0; i < 5; i++) {
+            let cell = document.createElement("td");
+            cell.textContent = values[i] !== undefined ? values[i].toFixed(2) : "0.00"; // Format as 2 decimal places
+            row.appendChild(cell);
+        }
+
+        // Add savings amount (last value in the array)
+        let savingsCell = document.createElement("td");
+        savingsCell.textContent = values[5] !== undefined ? values[5].toFixed(2) : "0.00";
+        row.appendChild(savingsCell);
+
+        // Append the row to the table
+        tableBody.appendChild(row);
+    }
 }
