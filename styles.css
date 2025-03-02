@@ -53,3 +53,13 @@ input[type="number"]::placeholder {
     font-family: 'Yeseva One';font-size: 22px;
 }
 
+button[type="submit"] {
+    background-color: #D0C092; /* Green background */
+    color: white;              /* White text */
+    padding: 8px 10px;  
+    font-family: 'Yeseva One';
+    font-size: 15px;           /* Font size */
+    border: none;              /* No border */
+    border-radius: 5px;        /* Rounded corners */
+    cursor: pointer;          /* Pointer cursor on hover */
+}

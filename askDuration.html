@@ -1,6 +1,7 @@
-<!-- Next page after askDuration: ask for monthly income -->
+<!-- Next page after front: ask for duration -->
 
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -10,7 +11,7 @@
 
 <body>
 
-    <p>What is your monthly income?</p>
+    <p id="displayName"></p>
 
     <form id="incomeForm">
         <input type="text" id="inputNumber" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$">

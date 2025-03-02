@@ -16,20 +16,18 @@
     
     <p>What do you want to save for?</p>
 
-    <form>
-        <input type="text" id="inputName" placeholder="Enter name here">
+    <form id="nameForm">
+        <input type="text" id="inputName" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="Enter name here">
     </form>
 
     <p>How much is it?</p>
 
     <form id="priceForm">
-        <input type="number" id="inputPrice" placeholder="$">
+        <input type="text" id="inputNumber" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$">
         <button type="submit">Submit</button>
     </form>
 
     <script src="frontend.js"></script>
-
-    
 </body>
 
 </html>
