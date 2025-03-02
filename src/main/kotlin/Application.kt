@@ -1,11 +1,23 @@
-package com.example.budgetapp  // ✅ Make sure this matches your package structure
+package mecord
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.routing.*
+import mecord.routes.budgetRoutes  // Ensure this exists
 
-@SpringBootApplication
-class Application
+fun main() {
+    embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
+}
 
-fun main(args: Array<String>) {
-    runApplication<Application>(*args)
+fun Application.module() {
+    install(ContentNegotiation) {
+        json()
+    }
+
+    routing {
+        budgetRoutes()  // Register budget routes
+    }
 }
