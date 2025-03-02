@@ -143,53 +143,53 @@
 
 
         document.addEventListener('DOMContentLoaded', function (event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    const price = localStorage.getItem("price");
-    const week = localStorage.getItem("week");
-    const expensesArray = [
-        parseFloat(localStorage.getItem("eating_out") /4),
-        parseFloat(localStorage.getItem("shopping") /4),
-        parseFloat(localStorage.getItem("groceries") /4),
-        parseFloat(localStorage.getItem("necessities")/4),
-        parseFloat(localStorage.getItem("transportation"/4))
-    ];
+        const price = localStorage.getItem("price");
+        const week = localStorage.getItem("week");
+        const expensesArray = [
+            parseFloat(localStorage.getItem("eating_out") /4),
+            parseFloat(localStorage.getItem("shopping") /4),
+            parseFloat(localStorage.getItem("groceries") /4),
+            parseFloat(localStorage.getItem("necessities")/4),
+            parseFloat(localStorage.getItem("transportation"/4))
+        ];
 
-    const distribution = determineDistribution(expensesArray);
-    const heaviness = calculateHeaviness(week, distribution, price);
-    const savingsPerCategory = howMuchSavingForEach(week, expensesArray, price);
-    const weeklySavingsArray = howMuchSavingForWeek(heaviness, savingsPerCategory);
-    const weeklySpendingAdjustments = howMuchUsingForWeek(weeklySavingsArray, expensesArray);
-    const result = processData(weeklySavingsArray, weeklySpendingAdjustments);
+        const distribution = determineDistribution(expensesArray);
+        const heaviness = calculateHeaviness(week, distribution, price);
+        const savingsPerCategory = howMuchSavingForEach(week, expensesArray, price);
+        const weeklySavingsArray = howMuchSavingForWeek(heaviness, savingsPerCategory);
+        const weeklySpendingAdjustments = howMuchUsingForWeek(weeklySavingsArray, expensesArray);
+        const result = processData(weeklySavingsArray, weeklySpendingAdjustments);
 
     // Generate the result table
     const tableBody = document.querySelector("#finalBudget tbody");
     tableBody.innerHTML = '';  // Clear any existing rows
 
-    // Loop over the weeks and create rows
-    result.forEach(weekData => {
-        const row = document.createElement('tr');
+        // Loop over the weeks and create rows
+        result.forEach(weekData => {
+            const row = document.createElement('tr');
 
-        // Add week number
-        const weekCell = document.createElement('td');
-        weekCell.textContent = weekData[0];  // Week number
-        row.appendChild(weekCell);
+            // Add week number
+            const weekCell = document.createElement('td');
+            weekCell.textContent = weekData[0];  // Week number
+            row.appendChild(weekCell);
 
-        // Add weekly savings for each category
-        weekData.slice(1, -1).forEach(amount => {
-            const cell = document.createElement('td');
-            cell.textContent = `$${amount.toFixed(2)}`;
-            row.appendChild(cell);
+            // Add weekly savings for each category
+            weekData.slice(1, -1).forEach(amount => {
+                const cell = document.createElement('td');
+                cell.textContent = `$${amount.toFixed(2)}`;
+                row.appendChild(cell);
+            });
+
+            // Add total weekly amount
+            const totalCell = document.createElement('td');
+            totalCell.textContent = `$${weekData[weekData.length - 1].toFixed(2)}`; // Total savings for the week
+            row.appendChild(totalCell);
+
+            tableBody.appendChild(row);
         });
-
-        // Add total weekly amount
-        const totalCell = document.createElement('td');
-        totalCell.textContent = `$${weekData[weekData.length - 1].toFixed(2)}`; // Total savings for the week
-        row.appendChild(totalCell);
-
-        tableBody.appendChild(row);
     });
-});
 
     </script>
 </body>

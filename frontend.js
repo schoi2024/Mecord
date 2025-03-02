@@ -100,6 +100,7 @@ if (inputBudgetElement) {
 
 // askBudget.html: retrieve budget values and redirect to finalBudget.html
 const budgetSubmitButton = document.getElementById("budgetSubmit");
+var data = '';
 if (budgetSubmitButton) {
     budgetSubmitButton.addEventListener("click", function(event) {
         event.preventDefault();
@@ -149,6 +150,7 @@ if (tableBody) {
 }
 
 
+/*
 
 // function to send data to Kotlin backend
 function sendDataToKotlin() {
@@ -219,3 +221,4 @@ function displayResult(result) {
         tableBody.appendChild(row);
     }
 }
+*/
