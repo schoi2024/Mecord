@@ -7,13 +7,13 @@
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    alias(libs.plugins.kotlin.jvm)
+    //alias(libs.plugins.kotlin.jvm)
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
    // kotlin("jvm") version "1.9.0"
     //kotlin("plugin.serialization") version "1.9.0"
-    //id("io.ktor.plugin") version "2.3.0"
+    id("org.jetbrains.kotlin.jvm") version "1.9.0"  // ✅ Match with the root `build.gradle.kts`
 }
 group = "com.example.budgetapp"
 version = "1.0.0"
@@ -45,7 +45,7 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
