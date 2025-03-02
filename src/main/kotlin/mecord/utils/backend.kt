@@ -1,5 +1,5 @@
-package mypackage
 
+package mecord.utils 
 // function to retrieve the input
 // will return a double array
 // divide it by 4 to be weekly

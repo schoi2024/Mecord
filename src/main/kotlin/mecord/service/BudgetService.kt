@@ -1,24 +1,29 @@
-package com.example.budgetapp.service
+package mecord.service
 
-import com.example.budgetapp.model.BudgetRequest
+import mecord.model.BudgetRequest
+import mecord.utils.DetermineDistribution   // ✅ Update import path
+import mecord.utils.CalculateHeaviness      // ✅ Update import path
+import mecord.utils.HowMuchSavingForEach    // ✅ Update import path
+import mecord.utils.HowMuchSavingForWeek    // ✅ Update import path
+import mecord.utils.HowMuchUsingForWeek     // ✅ Update import path
+import mecord.utils.processData             // ✅ Update import path
 
 class BudgetService {
-    fun processBudget(budgetRequest: BudgetRequest): Map<String, Any> {
-        val expensesArray = budgetRequest.toExpenseArray()  // ✅ Convert to IntArray
-        val totalExpenses = expensesArray.sum()  // ✅ Sum of all expenses
-        val remainingIncome = budgetRequest.income - totalExpenses
+    fun processBudget(budgetRequest: BudgetRequest): Map<Int, DoubleArray> {
+        val price: Int = budgetRequest.price
+        val week: Int = budgetRequest.week
+        val expensesArray: DoubleArray = budgetRequest.toExpenseArray()
 
-        println("Processing budget for ${budgetRequest.itemName}")
-        println("Week: ${budgetRequest.week}, Price: ${budgetRequest.price}")
-        println("Expenses: ${expensesArray.joinToString()}")
+        println("Processing Budget - Price: $price, Week: $week, Expenses: ${expensesArray.joinToString()}")
 
-        return mapOf(
-            "message" to "Budget processed successfully!",
-            "price" to budgetRequest.price,
-            "week" to budgetRequest.week,
-            "totalExpenses" to totalExpenses,
-            "remainingIncome" to remainingIncome,
-            "expensesArray" to expensesArray.toList()  // ✅ Convert IntArray to List for JSON response
-        )
+        val distribution = DetermineDistribution(expensesArray)
+        val heaviness = CalculateHeaviness(week, distribution, price)
+        val savingsPerCategory = HowMuchSavingForEach(week, expensesArray, price)
+        val weeklySavingsArray = HowMuchSavingForWeek(heaviness, savingsPerCategory)
+        val weeklySpendingAdjustments = HowMuchUsingForWeek(weeklySavingsArray, expensesArray)
+        val result = processData(weeklySavingsArray, weeklySpendingAdjustments)
+
+        println("Final Processed Budget Data: $result")
+        return result
     }
 }

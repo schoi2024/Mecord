@@ -1,7 +1,7 @@
-package com.example.budgetapp.controller  // ✅ Ensure correct package
+package mecord.controller  // ✅ Ensure correct package
 
 import org.springframework.web.bind.annotation.*
-import com.example.budgetapp.model.BudgetRequest
+import mecord.model.BudgetRequest
 
 @RestController
 @RequestMapping("/api")
