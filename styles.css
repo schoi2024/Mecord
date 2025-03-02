@@ -63,3 +63,20 @@ button[type="submit"] {
     border-radius: 5px;        /* Rounded corners */
     cursor: pointer;          /* Pointer cursor on hover */
 }
+
+#inputWeek {
+    text-align: right; /* Align the text inside the input field to the right */
+}
+
+.table {
+    width: 850px;
+    table-layout: fixed;
+    align-self: center;
+    border-collapse: collapse; /* Collapse borders between cells */
+    border-style:hidden;
+    
+}
+th, td {
+    border: 1px solid #D0C092; 
+    padding: 8px; /* Optional: adds space inside cells */
+}

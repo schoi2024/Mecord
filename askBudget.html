@@ -1,0 +1,46 @@
+<!-- Next page after askIncome: ask for monthly budget -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Yeseva One' rel='stylesheet'>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <p>What does your monthly budget typically look like?</p>
+
+    <p style="font-size: 17px;">Please input how much you usually spend per month for each category.<br> 
+        No need to be exact-just keep them realistic!
+    </p>
+
+    <table class="table" border="1" id="initialBudget">
+        <thead>
+            <tr style="font-weight: normal; font-size: 20px;">
+                <th>Groceries</th>
+                <th>Eating out / Food delivery</th>
+                <th>Shopping</th>
+                <th>Necessities</th>
+                <th>Transportation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" id="groceries" class="amount" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$" style="width: 150px;"></td>
+                <td><input type="text" id="eating-out" class="amount" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$" style="width: 150px;"></td>
+                <td><input type="text" id="shopping" class="amount" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$" style="width: 150px;"></td>
+                <td><input type="text" id="necessities" class="amount" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$" style="width: 150px;"></td>
+                <td><input type="text" id="transportation" class="amount" onkeydown="if(event.key === 'Enter') event.preventDefault();" placeholder="$" style="width: 150px;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id="budgetSubmit" type="submit" style="width:100px; align-self: center; margin-top: 50px;">Submit</button>
+    
+
+    <script src="frontend.js"></script>
+</body>
+
+</html>
