@@ -173,9 +173,9 @@ function sendDataToKotlin() {
         price: price,
         week: week,
         income: income,
-        groceries: groceries,
         eatingOut: eating_out,
         shopping: shopping,
+        groceries: groceries,
         necessities: necessities,
         transportation: transportation
     };
