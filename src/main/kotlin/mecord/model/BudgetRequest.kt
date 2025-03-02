@@ -1,4 +1,4 @@
-package com.example.budgetapp.model
+package mecord.model
 
 import kotlinx.serialization.Serializable
 
@@ -15,8 +15,8 @@ data class BudgetRequest(
     val transportation: Int
 ) {
     // ✅ Function to return expenses as IntArray
-    fun toExpenseArray(): IntArray {
-        return intArrayOf(groceries, eatingOut, shopping, necessities, transportation)
+    fun toExpenseArray(): DoubleArray {
+        return doubleArrayOf(eatingOut.toDouble().toDouble(), groceries.toDouble(), necessities.toDouble(), transportation.toDouble())
     }
 }
 
