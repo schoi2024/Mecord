@@ -43,153 +43,156 @@
     <script>
         // Helper Functions from Kotlin, now in JavaScript
         function determineDistribution(spends) {
-            const sum = spends.reduce((a, b) => a + b, 0);
-            const pureWants = (spends[0] + spends[1]) / sum;
-            const necessities = (spends[3] + spends[4]) / sum;
-            const groceryRatio = spends[2] / (spends[0] + spends[2]);
-            const eatingOutRatio = spends[0] / (spends[0] + spends[2]);
+    const sum = spends.reduce((a, b) => a + b, 0);
+    const pureWants = (spends[0] + spends[1]) / sum;
+    const necessities = (spends[3] + spends[4]) / sum;
+    const groceryRatio = spends[2] / (spends[0] + spends[2]);
+    const eatingOutRatio = spends[0] / (spends[0] + spends[2]);
 
-            if (groceryRatio > (eatingOutRatio * 2)) {
-                return 2;
-            } else if ((necessities / 3) < pureWants) {
-                return 1;
-            }
-            return 0;
+    if (groceryRatio > (eatingOutRatio * 2)) {
+        return 2;
+    } else if ((necessities / 3) < pureWants) {
+        return 1;
+    }
+    return 0;
+}
+
+function calculateHeaviness(time, distribution, cost) {
+    const percentage = 100.0 / (time * 2);
+    const weeklySaving = cost / time;
+    let heaviness = new Array(time).fill(0);
+    let instint = Math.floor(time / 2);
+
+    if (distribution === 0) {
+        for (let i = 0; i < time - 1; i++) {
+            heaviness[i] = 100.0;
         }
-
-        function calculateHeaviness(time, distribution, cost) {
-            const percentage = 100.0 / (time * 2);
-            const weeklySaving = cost / time;
-            let heaviness = new Array(time).fill(0);
-            const instint = Math.floor(time / 2);
-
-            if (distribution === 0) {
-                heaviness.fill(100);
-            } else if (distribution === 1) {
-                for (let i = 0; i < time; i++) {
-                    if (i < time / 2) {
-                        heaviness[i] = ((time / 2 - i) * percentage + 100);
-                    } else {
-                        heaviness[i] = ((time / 2 - (i - 1)) * percentage + 100);
-                    }
-                }
-            } else {
-                for (let i = 0; i < time; i++) {
-                    if (i < time / 2) {
-                        heaviness[i] = ((-time / 2 + i) * percentage + 100);
-                    } else {
-                        heaviness[i] = ((-time / 2 + (i - 1)) * percentage + 100);
-                    }
+    } else if (distribution === 1) {
+        if (time % 2 === 0) {
+            for (let i = 0; i < time + 1; i++) {
+                if (i < time / 2) {
+                    heaviness[i] = ((time / 2 - i) * percentage + 100.0);
+                } else if (i === time / 2) {
+                    continue;
+                } else {
+                    heaviness[i - 1] = ((time / 2 - i) * percentage + 100.0);
                 }
             }
-            return heaviness;
-        }
-
-        function howMuchSavingForEach(time, spends, cost) {
-            const savingMap = {};
-            const weeklySaving = cost / time;
-            const pureWants = spends[0] + spends[1];
-            if (pureWants * 0.7 > weeklySaving) {
-                const eatingOutRatio = spends[0] / pureWants;
-                const shoppingRatio = spends[1] / pureWants;
-                savingMap[0] = eatingOutRatio * weeklySaving;
-                savingMap[1] = shoppingRatio * weeklySaving;
-                for (let i = 2; i < 5; i++) {
-                    savingMap[i] = 0;
-                }
-            } else {
-                savingMap[0] = spends[0] * 0.7;
-                savingMap[1] = spends[1] * 0.7;
-                const remainder = weeklySaving - (spends[0] + spends[1]) * 0.7;
-                savingMap[2] = remainder;
-                savingMap[3] = 0;
-                savingMap[4] = 0;
+        } else {
+            for (let i = 0; i < time; i++) {
+                heaviness[i] = ((time / 2 - i) * percentage + 100.0);
             }
-            return savingMap;
         }
-
-        function howMuchSavingForWeek(arr, map) {
-            return arr.map(factor => {
-                const weekMap = {};
-                Object.keys(map).forEach(key => {
-                    weekMap[key] = map[key] * (factor / 100);
-                });
-                return weekMap;
-            });
+    } else {
+        if (time % 2 === 0) {
+            for (let i = 0; i < time + 1; i++) {
+                if (i < time / 2) {
+                    heaviness[i] = ((-time / 2 + i) * percentage + 100.0);
+                } else if (i === time / 2) {
+                    continue;
+                } else {
+                    heaviness[i - 1] = ((-time / 2 + i) * percentage + 100.0);
+                }
+            }
+        } else {
+            for (let i = 0; i < time; i++) {
+                heaviness[i] = ((-time / 2 + i) * percentage + 100.0);
+            }
         }
+    }
+    
+    return heaviness;
+}
 
-        function howMuchUsingForWeek(arrayOfMaps, spends) {
-            return arrayOfMaps.map(map => {
-                const usedMap = {};
-                Object.keys(map).forEach(key => {
-                    usedMap[key] = (spends[key] || 0) - map[key];
-                });
-                return usedMap;
-            });
+function howMuchSavingForEach(time, spends, cost) {
+    const savingMap = {};
+    const weeklySaving = cost / time;
+    const pureWants = spends[0] + spends[1];
+
+    if (pureWants * 0.7 > weeklySaving) {
+        savingMap[0] = (spends[0] / pureWants) * weeklySaving;
+        savingMap[1] = (spends[1] / pureWants) * weeklySaving;
+        for (let i = 2; i < 5; i++) {
+            savingMap[i] = 0;
         }
+    } else {
+        savingMap[0] = spends[0] * 0.7;
+        savingMap[1] = spends[1] * 0.7;
+        savingMap[2] = weeklySaving - (spends[0] + spends[1]) * 0.7;
+        savingMap[3] = 0;
+        savingMap[4] = 0;
+    }
+    return savingMap;
+}
 
-        function processData(array1, array2) {
-            const result = [];
-            array2.forEach((map, i) => {
-                const week = i + 1;
-                const weekSavings = Object.values(map);
-                const totalForWeek = weekSavings.reduce((sum, amount) => sum + amount, 0);
+function howMuchSavingForWeek(arr, map) {
+    return arr.map(factor => {
+        const weekMap = {};
+        Object.keys(map).forEach(key => {
+            weekMap[key] = map[key] * (factor / 100);
+        });
+        return weekMap;
+    });
+}
 
-                // Return an array: [week number, eatingOut, shopping, groceries, necessities, transportation, total]
-                result.push([week, ...weekSavings, totalForWeek]);
-            });
-            return result;
-        }
+function howMuchUsingForWeek(arrayOfMaps, spends) {
+    return arrayOfMaps.map(map => {
+        const usedMap = {};
+        Object.keys(map).forEach(key => {
+            usedMap[key] = (spends[key] || 0) - map[key];
+        });
+        return usedMap;
+    });
+}
 
+function processData(array1, array2, expensesArray) {
+    const result = [];
+    const sum = expensesArray.reduce((acc, val) => acc + val, 0);
+    array2.forEach((map, i) => {
+        const week = i + 1;
+        const weekSavings = Object.keys(map).map(key => map[key]);
+        const totalForWeek = [...weekSavings.values()].reduce((acc, val) => acc + val, 0);
+        result.push([week, ...weekSavings, sum - totalForWeek]);
+    });
+    return result;
+}
 
-        document.addEventListener('DOMContentLoaded', function (event) {
-        event.preventDefault();
+document.addEventListener('DOMContentLoaded', function (event) {
+    event.preventDefault();
 
-        const price = localStorage.getItem("price");
-        const week = localStorage.getItem("week");
-        const expensesArray = [
-            parseFloat(localStorage.getItem("eating_out") /4),
-            parseFloat(localStorage.getItem("shopping") /4),
-            parseFloat(localStorage.getItem("groceries") /4),
-            parseFloat(localStorage.getItem("necessities")/4),
-            parseFloat(localStorage.getItem("transportation"/4))
-        ];
+    const price = parseFloat(localStorage.getItem("price"));
+    const week = parseInt(localStorage.getItem("week"));
+    const expensesArray = [
+        parseFloat(localStorage.getItem("eating_out")) / 4,
+        parseFloat(localStorage.getItem("shopping")) / 4,
+        parseFloat(localStorage.getItem("groceries")) / 4,
+        parseFloat(localStorage.getItem("necessities")) / 4,
+        parseFloat(localStorage.getItem("transportation")) / 4
+    ];
 
-        const distribution = determineDistribution(expensesArray);
-        const heaviness = calculateHeaviness(week, distribution, price);
-        const savingsPerCategory = howMuchSavingForEach(week, expensesArray, price);
-        const weeklySavingsArray = howMuchSavingForWeek(heaviness, savingsPerCategory);
-        const weeklySpendingAdjustments = howMuchUsingForWeek(weeklySavingsArray, expensesArray);
-        const result = processData(weeklySavingsArray, weeklySpendingAdjustments);
+    const distribution = determineDistribution(expensesArray);
+    const heaviness = calculateHeaviness(week, distribution, price);
+    const savingsPerCategory = howMuchSavingForEach(week, expensesArray, price);
+    const weeklySavingsArray = howMuchSavingForWeek(heaviness, savingsPerCategory);
+    const weeklySpendingAdjustments = howMuchUsingForWeek(weeklySavingsArray, expensesArray);
+    const result = processData(weeklySavingsArray, weeklySpendingAdjustments, expensesArray);
 
     // Generate the result table
     const tableBody = document.querySelector("#finalBudget tbody");
     tableBody.innerHTML = '';  // Clear any existing rows
 
-        // Loop over the weeks and create rows
-        result.forEach(weekData => {
-            const row = document.createElement('tr');
+    result.forEach(weekData => {
+        const row = document.createElement('tr');
 
-            // Add week number
-            const weekCell = document.createElement('td');
-            weekCell.textContent = weekData[0];  // Week number
-            row.appendChild(weekCell);
-
-            // Add weekly savings for each category
-            weekData.slice(1, -1).forEach(amount => {
-                const cell = document.createElement('td');
-                cell.textContent = `$${amount.toFixed(2)}`;
-                row.appendChild(cell);
-            });
-
-            // Add total weekly amount
-            const totalCell = document.createElement('td');
-            totalCell.textContent = `$${weekData[weekData.length - 1].toFixed(2)}`; // Total savings for the week
-            row.appendChild(totalCell);
-
-            tableBody.appendChild(row);
+        weekData.forEach((amount, index) => {
+            const cell = document.createElement('td');
+            cell.textContent = index === 0 ? amount : `$${amount.toFixed(2)}`;
+            row.appendChild(cell);
         });
+
+        tableBody.appendChild(row);
     });
+});
 
     </script>
 </body>
